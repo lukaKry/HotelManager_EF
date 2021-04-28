@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HotelExercise.Models.Address">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAAAAAAAAIAAAAAAAAAAAAAAABAAIAAAAAAAA=</HashCode>
+      <FileName>Models\Address.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Hotel" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HotelExercise.Models.Hotel">
+    <Position X="3.25" Y="3" Width="1.5" />
+    <AssociationLine Name="HotelSpecials" Type="HotelExercise.Models.HotelSpecials" ManuallyRouted="true">
+      <Path>
+        <Point X="4" Y="3" />
+        <Point X="4" Y="1.796" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.068" Y="0.456" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAASAAAAAAAAAAAAAAAAAAQAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Hotel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Address" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="HotelSpecials" />
+      <Property Name="RoomTypes" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="HotelExercise.Models.HotelSpecials">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <AssociationLine Name="Hotels" Type="HotelExercise.Models.Hotel">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.692" Y="0.487" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\HotelSpecials.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Hotels" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="HotelExercise.Models.Price">
+    <Position X="8.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAAAAAgAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\Price.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RoomType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HotelExercise.Models.RoomType">
+    <Position X="6" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAAQAggEAAAAAQAACAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Models\RoomType.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Hotel" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
