@@ -48,6 +48,7 @@ namespace HotelExercise
             await LoadMenuAsync(dbContext);
 
             //ending point of the application
+            Console.ReadLine();
             Console.WriteLine("Everything is done. Bye bye.");
         }
 
