@@ -5,7 +5,7 @@ namespace HotelExercise.Models
 {
     public class Address
     {
-        [ForeignKey("Hotel")]
+        
         public int Id { get; set; }
 
         [MaxLength(250)]
@@ -17,7 +17,8 @@ namespace HotelExercise.Models
         [MaxLength(100)]
         public string City { get; set; } = string.Empty;
 
-        public Hotel Hotel { get; set; } = new();
+        public int HotelId { get; set; }
+        public Hotel Hotel { get; set; }
 
     }
 }

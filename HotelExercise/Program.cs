@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelExercise
@@ -29,7 +30,7 @@ namespace HotelExercise
             //entry point to the application
             Console.WriteLine("Welcome to the Hotel Manager Console App!");
 
-            //create a database instance
+            //create a database context instance
             var factory = new HotelsContextFactory();
             using var dbContext = factory.CreateDbContext();
 
@@ -44,9 +45,18 @@ namespace HotelExercise
             //for testing purposes - Adds one hotel to the database 
             //await AddFirstHotelAsync(dbContext);
 
+            await LoadMenuAsync(dbContext);
 
+            //ending point of the application
+            Console.WriteLine("Everything is done. Bye bye.");
+        }
+
+        private static async Task LoadMenuAsync(HotelsContext dbContext)
+        {
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("0 - add a new hotel");
+            Console.WriteLine("1 - show a hotel by Id");
+            Console.WriteLine("2 - show hotels list");
             Console.WriteLine("Press ESC to exit");
             var input = Console.ReadKey();
 
@@ -62,37 +72,85 @@ namespace HotelExercise
                     break;
                 case ConsoleKey.D1:
                     Console.Clear();
+                    Console.WriteLine("Id: ");
                     int id = int.Parse(Console.ReadLine());
-                    await ShowHotelById(id);
-                    //tu trzeba zaimplementować metodę, która będzie pobierała dane z bazy danych
+                     await ShowHotelById(id, dbContext);
                     break;
                 case ConsoleKey.NumPad1:
                     Console.Clear();
+                    Console.WriteLine("Id: ");
                     int id2 = int.Parse(Console.ReadLine());
-                    await ShowHotelById(id2);
+                    await ShowHotelById(id2, dbContext);
                     break;
                 case ConsoleKey.NumPad2:
-                    Console.Clear();
-                    await ShowHotels();
-                    //tu trzeba jeszcze jakiś powrót do menu wymyślić
+                    await ShowHotels(dbContext);
                     break;
                 case ConsoleKey.D2:
-                    Console.Clear();
-                    await ShowHotels();
-                    //tu trzeba jeszcze jakiś powrót do menu wymyślić
+                    await ShowHotels(dbContext);
 
                     break;
 
                 case ConsoleKey.Escape:
                     break;
             }
+        }
+
+        private static async Task ShowHotelById(int id, HotelsContext dbContext)
+        {
+            var hotel = await dbContext.Hotels
+                .Include(va => va.Address)
+                .Include(va => va.HotelSpecials)
+                .Include(va => va.RoomTypes)
+                .ThenInclude(va => va.Price)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
+            StringBuilder sb = new();
+            sb.Append($"# {hotel.Name}\n\n")
+              .AppendLine("## Location\n")
+              .AppendLine($"{hotel.Address.Street} \n{hotel.Address.ZipCode} {hotel.Address.City}\n")
+              .AppendLine("## Specials\n");
+            foreach(var item in hotel.HotelSpecials)
+            {
+                sb.AppendLine($"* {item.Special}");
+            }
+
+            AppendTableToStringBuilder(sb, hotel);
+            
+            Console.WriteLine(sb.ToString());
+            Console.WriteLine("");
+        }
+
+        private static void AppendTableToStringBuilder(StringBuilder sb, Hotel hotel)
+        {
+            string room = "Room Type";
+            string size = "Size";
+            string from = "Price Valid From";
+            string to = "Price Valid To";
+            string price = "Price in";
+
+            sb.AppendLine()
+             .AppendLine("# Room Types\n")
+             .AppendLine(String.Format("| {0,25} | {1,5} | {2,20} | {3,20} | {4,10} EUR |", room, size, from, to, price))
+             .AppendLine("| ------------------------- | ----- | -------------------- | -------------------- | -------------- |");
 
 
-            //ending point of the application
-            Console.WriteLine("Everything is done. Bye bye.");
+            foreach (var item in hotel.RoomTypes)
+            {
+                var line = String.Format("| {0,25} | {1,5} | {2,20} | {3,20} | {4,10} EUR |", item.Title, item.Size, item.Price.ValidFrom, item.Price.ValidUntil, item.Price.PriceEur);
+                sb.AppendLine(line);
+            }
+           
+        }
 
-
-
+        private static async Task ShowHotels(HotelsContext dbContext)
+        {
+            Console.Clear();
+            var items = await dbContext.Hotels.ToArrayAsync();
+            foreach(var item in items)
+            {
+                Console.WriteLine($"{item.Id}: {item.Name}");
+            }
+            await LoadMenuAsync(dbContext);
         }
 
         private static async Task AddHotelAsync(HotelsContext dbContext)

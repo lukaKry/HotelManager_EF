@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelExercise.Migrations
 {
     [DbContext(typeof(HotelsContext))]
-    [Migration("20210428075422_zipCodeMadeString")]
-    partial class zipCodeMadeString
+    [Migration("20210429063752_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,12 +24,17 @@ namespace HotelExercise.Migrations
             modelBuilder.Entity("HotelExercise.Models.Address", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Street")
                         .IsRequired()
@@ -42,6 +47,9 @@ namespace HotelExercise.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HotelId")
+                        .IsUnique();
 
                     b.ToTable("Addresses");
                 });
@@ -154,7 +162,7 @@ namespace HotelExercise.Migrations
                 {
                     b.HasOne("HotelExercise.Models.Hotel", "Hotel")
                         .WithOne("Address")
-                        .HasForeignKey("HotelExercise.Models.Address", "Id")
+                        .HasForeignKey("HotelExercise.Models.Address", "HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
